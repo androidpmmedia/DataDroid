@@ -13,40 +13,40 @@ import android.os.Parcelable;
 
 public final class City implements Parcelable {
 
-    public String name;
-    public String postalCode;
-    public String state;
-    public String country;
+  public String name;
+  public String postalCode;
+  public String state;
+  public String country;
 
-    public City() {
+  public City() {
+  }
+
+  // Parcelable management
+  private City(Parcel in) {
+    name = in.readString();
+    postalCode = in.readString();
+    state = in.readString();
+    country = in.readString();
+  }
+
+  public int describeContents() {
+    return 0;
+  }
+
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(name);
+    dest.writeString(postalCode);
+    dest.writeString(state);
+    dest.writeString(country);
+  }
+
+  public static final Parcelable.Creator<City> CREATOR = new Parcelable.Creator<City>() {
+    public City createFromParcel(Parcel in) {
+      return new City(in);
     }
 
-    // Parcelable management
-    private City(Parcel in) {
-        name = in.readString();
-        postalCode = in.readString();
-        state = in.readString();
-        country = in.readString();
+    public City[] newArray(int size) {
+      return new City[size];
     }
-
-    public int describeContents() {
-        return 0;
-    }
-
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(postalCode);
-        dest.writeString(state);
-        dest.writeString(country);
-    }
-
-    public static final Parcelable.Creator<City> CREATOR = new Parcelable.Creator<City>() {
-        public City createFromParcel(Parcel in) {
-            return new City(in);
-        }
-
-        public City[] newArray(int size) {
-            return new City[size];
-        }
-    };
+  };
 }

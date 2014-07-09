@@ -19,34 +19,33 @@ import org.json.JSONObject;
 
 public final class PhoneDeleteFactory {
 
-    private static final String TAG = PhoneDeleteFactory.class.getSimpleName();
+  private static final String TAG = PhoneDeleteFactory.class.getSimpleName();
 
-    private PhoneDeleteFactory() {
-        // No public constructor
+  private PhoneDeleteFactory() {
+    // No public constructor
+  }
+
+  public static long[] parseResult(String wsResponse) throws DataException {
+
+    long[] deletedPhoneIdArray = null;
+
+    try {
+      JSONObject parser = new JSONObject(wsResponse);
+      JSONObject jsonRoot = parser.getJSONObject(JSONTag.CRUD_PHONE_DELETE_ELEM_PHONES);
+      JSONArray jsonPhoneArray = jsonRoot.getJSONArray(JSONTag.CRUD_PHONE_DELETE_ELEM_PHONE);
+      int size = jsonPhoneArray.length();
+
+      deletedPhoneIdArray = new long[size];
+
+      for (int i = 0; i < size; i++) {
+        deletedPhoneIdArray[i] =
+            jsonPhoneArray.getJSONObject(i).getLong(JSONTag.CRUD_PHONE_DELETE_ELEM_ID);
+      }
+    } catch (JSONException e) {
+      Log.e(TAG, "JSONException", e);
+      throw new DataException(e);
     }
 
-    public static long[] parseResult(String wsResponse) throws DataException {
-
-        long[] deletedPhoneIdArray = null;
-
-        try {
-            JSONObject parser = new JSONObject(wsResponse);
-            JSONObject jsonRoot = parser.getJSONObject(JSONTag.CRUD_PHONE_DELETE_ELEM_PHONES);
-            JSONArray jsonPhoneArray = jsonRoot
-                    .getJSONArray(JSONTag.CRUD_PHONE_DELETE_ELEM_PHONE);
-            int size = jsonPhoneArray.length();
-
-            deletedPhoneIdArray = new long[size];
-
-            for (int i = 0; i < size; i++) {
-                deletedPhoneIdArray[i] = jsonPhoneArray.getJSONObject(i).getLong(
-                        JSONTag.CRUD_PHONE_DELETE_ELEM_ID);
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, "JSONException", e);
-            throw new DataException(e);
-        }
-
-        return deletedPhoneIdArray;
-    }
+    return deletedPhoneIdArray;
+  }
 }

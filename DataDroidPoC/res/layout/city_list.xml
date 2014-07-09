@@ -9,49 +9,49 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp">
 
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/b_load"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="@string/city_list_b_load"/>
+
+    <Button
+        android:id="@+id/b_clear_memory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="@string/city_list_b_clear_memory"/>
+  </LinearLayout>
+
+  <View
+      android:layout_width="fill_parent"
+      android:layout_height="2dp"
+      android:background="?android:attr/listDivider"/>
+
+  <FrameLayout
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent">
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+    <TextView
+        android:id="@android:id/empty"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/b_load"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/city_list_b_load" />
-
-        <Button
-            android:id="@+id/b_clear_memory"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/city_list_b_clear_memory" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="?android:attr/listDivider" />
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-
-        <TextView
-            android:id="@android:id/empty"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="30dp"
-            android:text="@string/city_list_tv_empty" />
-    </FrameLayout>
+        android:gravity="center"
+        android:paddingTop="30dp"
+        android:text="@string/city_list_tv_empty"/>
+  </FrameLayout>
 
 </LinearLayout>

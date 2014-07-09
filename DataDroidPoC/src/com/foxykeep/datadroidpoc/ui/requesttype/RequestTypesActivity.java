@@ -21,114 +21,114 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public final class RequestTypesActivity extends DataDroidActivity
-        implements RequestManager.RequestListener, View.OnClickListener,
-        ConnectionErrorDialogFragment.ConnectionErrorDialogListener {
+    implements RequestManager.RequestListener, View.OnClickListener,
+    ConnectionErrorDialogFragment.ConnectionErrorDialogListener {
 
-    private Spinner mSpinnerRequestTypes;
-    private TextView mTVResult;
+  private Spinner mSpinnerRequestTypes;
+  private TextView mTVResult;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.request_types);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    setContentView(R.layout.request_types);
 
-        bindViews();
-    }
+    bindViews();
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        for (int i = 0; i < mRequestList.size(); i++) {
-            Request request = mRequestList.get(i);
+  @Override
+  protected void onResume() {
+    super.onResume();
+    for (int i = 0; i < mRequestList.size(); i++) {
+      Request request = mRequestList.get(i);
 
-            if (mRequestManager.isRequestInProgress(request)) {
-                mRequestManager.addRequestListener(this, request);
-                setProgressBarIndeterminateVisibility(true);
-            } else {
-                mRequestManager.callListenerWithCachedData(this, request);
-                i--;
-                mRequestList.remove(request);
-            }
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (!mRequestList.isEmpty()) {
-            mRequestManager.removeRequestListener(this);
-        }
-    }
-
-    private void bindViews() {
-        mSpinnerRequestTypes = (Spinner) findViewById(R.id.sp_request_types);
-
-        findViewById(R.id.b_load).setOnClickListener(this);
-
-        mTVResult = (TextView) findViewById(R.id.tv_result);
-    }
-
-    private void callComputeSquareWS() {
+      if (mRequestManager.isRequestInProgress(request)) {
+        mRequestManager.addRequestListener(this, request);
         setProgressBarIndeterminateVisibility(true);
-        mTVResult.setText("");
-        int method = mSpinnerRequestTypes.getSelectedItemPosition();
-        Request request = PoCRequestFactory.getRequestTypesRequest(method);
-        mRequestManager.execute(request, this);
-        mRequestList.add(request);
+      } else {
+        mRequestManager.callListenerWithCachedData(this, request);
+        i--;
+        mRequestList.remove(request);
+      }
     }
+  }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.b_load:
-                callComputeSquareWS();
-                break;
-        }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (!mRequestList.isEmpty()) {
+      mRequestManager.removeRequestListener(this);
     }
+  }
 
-    @Override
-    public void onRequestFinished(Request request, Bundle resultData) {
-        if (mRequestList.contains(request)) {
-            setProgressBarIndeterminateVisibility(false);
-            mRequestList.remove(request);
+  private void bindViews() {
+    mSpinnerRequestTypes = (Spinner) findViewById(R.id.sp_request_types);
 
-            String result = resultData.getString(PoCRequestFactory.BUNDLE_EXTRA_RESULT);
-            mTVResult.setText(result);
-        }
-    }
+    findViewById(R.id.b_load).setOnClickListener(this);
 
-    @Override
-    public void onRequestConnectionError(Request request, int statusCode) {
-        if (mRequestList.contains(request)) {
-            setProgressBarIndeterminateVisibility(false);
-            mRequestList.remove(request);
+    mTVResult = (TextView) findViewById(R.id.tv_result);
+  }
 
-            ConnectionErrorDialogFragment.show(this, request, this);
-        }
-    }
+  private void callComputeSquareWS() {
+    setProgressBarIndeterminateVisibility(true);
+    mTVResult.setText("");
+    int method = mSpinnerRequestTypes.getSelectedItemPosition();
+    Request request = PoCRequestFactory.getRequestTypesRequest(method);
+    mRequestManager.execute(request, this);
+    mRequestList.add(request);
+  }
 
-    @Override
-    public void onRequestDataError(Request request) {
-        if (mRequestList.contains(request)) {
-            setProgressBarIndeterminateVisibility(false);
-            mRequestList.remove(request);
-
-            showBadDataErrorDialog();
-        }
-    }
-
-    @Override
-    public void onRequestCustomError(Request request, Bundle resultData) {
-        // Never called.
-    }
-
-    @Override
-    public void connectionErrorDialogCancel(Request request) {
-    }
-
-    @Override
-    public void connectionErrorDialogRetry(Request request) {
+  @Override
+  public void onClick(View view) {
+    switch (view.getId()) {
+      case R.id.b_load:
         callComputeSquareWS();
+        break;
     }
+  }
+
+  @Override
+  public void onRequestFinished(Request request, Bundle resultData) {
+    if (mRequestList.contains(request)) {
+      setProgressBarIndeterminateVisibility(false);
+      mRequestList.remove(request);
+
+      String result = resultData.getString(PoCRequestFactory.BUNDLE_EXTRA_RESULT);
+      mTVResult.setText(result);
+    }
+  }
+
+  @Override
+  public void onRequestConnectionError(Request request, int statusCode) {
+    if (mRequestList.contains(request)) {
+      setProgressBarIndeterminateVisibility(false);
+      mRequestList.remove(request);
+
+      ConnectionErrorDialogFragment.show(this, request, this);
+    }
+  }
+
+  @Override
+  public void onRequestDataError(Request request) {
+    if (mRequestList.contains(request)) {
+      setProgressBarIndeterminateVisibility(false);
+      mRequestList.remove(request);
+
+      showBadDataErrorDialog();
+    }
+  }
+
+  @Override
+  public void onRequestCustomError(Request request, Bundle resultData) {
+    // Never called.
+  }
+
+  @Override
+  public void connectionErrorDialogCancel(Request request) {
+  }
+
+  @Override
+  public void connectionErrorDialogRetry(Request request) {
+    callComputeSquareWS();
+  }
 }

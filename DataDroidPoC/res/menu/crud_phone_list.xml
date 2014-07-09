@@ -5,15 +5,15 @@
     As long as you retain this notice you can do whatever you want with this stuff. If we meet some 
     day, and you think this stuff is worth it, you can buy me a beer in return
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/menu_add"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/crud_phone_list_menu_add"/>
-    <item
-        android:id="@+id/menu_delete_all"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:title="@string/crud_phone_list_menu_delete_all"/>
+  <item
+      android:id="@+id/menu_add"
+      android:icon="@android:drawable/ic_menu_add"
+      android:title="@string/crud_phone_list_menu_add"/>
+  <item
+      android:id="@+id/menu_delete_all"
+      android:icon="@android:drawable/ic_menu_delete"
+      android:title="@string/crud_phone_list_menu_delete_all"/>
 
 </menu>

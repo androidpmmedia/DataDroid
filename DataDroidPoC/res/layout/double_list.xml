@@ -10,85 +10,85 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp">
 
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/b_load_top"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.32"
+        android:text="@string/double_list_b_load_top"/>
+
+    <Button
+        android:id="@+id/b_load_bottom"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.36"
+        android:text="@string/double_list_b_load_bottom"/>
+
+    <Button
+        android:id="@+id/b_load_both"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.32"
+        android:text="@string/double_list_b_load_both"/>
+  </LinearLayout>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="2dp"
+      android:background="?android:attr/listDivider"/>
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="0.5"
+      tools:ignore="NestedWeights">
+
+    <ListView
+        android:id="@+id/lv_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/tv_empty_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:gravity="center"
+        android:paddingTop="30dp"
+        android:text="@string/double_list_tv_empty"/>
+  </FrameLayout>
 
-        <Button
-            android:id="@+id/b_load_top"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.32"
-            android:text="@string/double_list_b_load_top" />
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="2dp"
+      android:layout_marginBottom="5dp"
+      android:layout_marginTop="5dp"
+      android:background="?android:attr/listDivider"/>
 
-        <Button
-            android:id="@+id/b_load_bottom"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.36"
-            android:text="@string/double_list_b_load_bottom" />
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="0.5"
+      tools:ignore="NestedWeights">
 
-        <Button
-            android:id="@+id/b_load_both"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.32"
-            android:text="@string/double_list_b_load_both" />
-    </LinearLayout>
-
-    <View
+    <ListView
+        android:id="@+id/lv_bottom"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="?android:attr/listDivider" />
+        android:layout_height="match_parent"/>
 
-    <FrameLayout
+    <TextView
+        android:id="@+id/tv_empty_bottom"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        tools:ignore="NestedWeights" >
-
-        <ListView
-            android:id="@+id/lv_top"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/tv_empty_top"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="30dp"
-            android:text="@string/double_list_tv_empty" />
-    </FrameLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="?android:attr/listDivider" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        tools:ignore="NestedWeights" >
-
-        <ListView
-            android:id="@+id/lv_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/tv_empty_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="30dp"
-            android:text="@string/double_list_tv_empty" />
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="30dp"
+        android:text="@string/double_list_tv_empty"/>
+  </FrameLayout>
 
 </LinearLayout>

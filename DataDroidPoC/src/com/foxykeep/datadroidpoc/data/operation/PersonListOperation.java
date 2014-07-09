@@ -31,51 +31,50 @@ import java.util.ArrayList;
 
 public final class PersonListOperation implements Operation {
 
-    public static final String PARAM_RETURN_FORMAT =
-            "com.foxykeep.datadroidpoc.extra.returnFormat";
-    public static final int RETURN_FORMAT_XML = 0;
-    public static final int RETURN_FORMAT_JSON = 1;
+  public static final String PARAM_RETURN_FORMAT = "com.foxykeep.datadroidpoc.extra.returnFormat";
+  public static final int RETURN_FORMAT_XML = 0;
+  public static final int RETURN_FORMAT_JSON = 1;
 
-    @Override
-    public Bundle execute(Context context, Request request) throws ConnectionException,
-            DataException {
-        int returnFormat = request.getInt(PARAM_RETURN_FORMAT);
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException {
+    int returnFormat = request.getInt(PARAM_RETURN_FORMAT);
 
-        String url = returnFormat == RETURN_FORMAT_XML ? WSConfig.WS_PERSON_LIST_URL_XML
-                : WSConfig.WS_PERSON_LIST_URL_JSON;
-        NetworkConnection networkConnection = new NetworkConnection(context, url);
-        ConnectionResult result = networkConnection.execute();
+    String url = returnFormat == RETURN_FORMAT_XML ? WSConfig.WS_PERSON_LIST_URL_XML
+        : WSConfig.WS_PERSON_LIST_URL_JSON;
+    NetworkConnection networkConnection = new NetworkConnection(context, url);
+    ConnectionResult result = networkConnection.execute();
 
-        ArrayList<Person> personList;
-        if (returnFormat == RETURN_FORMAT_XML) {
-            personList = PersonListXmlFactory.parseResult(result.body);
-        } else {
-            personList = PersonListJsonFactory.parseResult(result.body);
-        }
-
-        // Clear the table
-        context.getContentResolver().delete(DbPerson.CONTENT_URI, null, null);
-
-        // Adds the persons in the database
-        int personListSize = personList.size();
-        if (personListSize > 0) {
-            ArrayList<ContentProviderOperation> operationList =
-                    new ArrayList<ContentProviderOperation>();
-
-            for (int i = 0; i < personListSize; i++) {
-                operationList.add(ContentProviderOperation.newInsert(DbPerson.CONTENT_URI)
-                        .withValues(personList.get(i).toContentValues()).build());
-            }
-
-            try {
-                context.getContentResolver().applyBatch(PoCProvider.AUTHORITY, operationList);
-            } catch (RemoteException e) {
-                throw new DataException(e);
-            } catch (OperationApplicationException e) {
-                throw new DataException(e);
-            }
-        }
-
-        return null;
+    ArrayList<Person> personList;
+    if (returnFormat == RETURN_FORMAT_XML) {
+      personList = PersonListXmlFactory.parseResult(result.body);
+    } else {
+      personList = PersonListJsonFactory.parseResult(result.body);
     }
+
+    // Clear the table
+    context.getContentResolver().delete(DbPerson.CONTENT_URI, null, null);
+
+    // Adds the persons in the database
+    int personListSize = personList.size();
+    if (personListSize > 0) {
+      ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
+
+      for (int i = 0; i < personListSize; i++) {
+        operationList.add(ContentProviderOperation.newInsert(DbPerson.CONTENT_URI)
+            .withValues(personList.get(i).toContentValues())
+            .build());
+      }
+
+      try {
+        context.getContentResolver().applyBatch(PoCProvider.AUTHORITY, operationList);
+      } catch (RemoteException e) {
+        throw new DataException(e);
+      } catch (OperationApplicationException e) {
+        throw new DataException(e);
+      }
+    }
+
+    return null;
+  }
 }

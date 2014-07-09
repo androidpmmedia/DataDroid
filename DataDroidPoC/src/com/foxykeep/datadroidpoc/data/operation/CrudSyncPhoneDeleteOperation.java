@@ -25,28 +25,25 @@ import java.util.HashMap;
 
 public final class CrudSyncPhoneDeleteOperation implements Operation {
 
-    public static final String PARAM_USER_ID = "com.foxykeep.datadroidpoc.extra.userId";
-    public static final String PARAM_PHONE_ID_LIST = "com.foxykeep.datadroidpoc.extra.phoneIdList";
+  public static final String PARAM_USER_ID = "com.foxykeep.datadroidpoc.extra.userId";
+  public static final String PARAM_PHONE_ID_LIST = "com.foxykeep.datadroidpoc.extra.phoneIdList";
 
-    @Override
-    public Bundle execute(Context context, Request request) throws ConnectionException,
-            DataException {
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(WSConfig.WS_CRUD_PHONE_DELETE_PROPERTY_USER_UDID,
-                request.getString(PARAM_USER_ID));
-        params.put(WSConfig.WS_CRUD_PHONE_DELETE_PROPERTY_IDS,
-                request.getString(PARAM_PHONE_ID_LIST));
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException {
+    HashMap<String, String> params = new HashMap<String, String>();
+    params.put(WSConfig.WS_CRUD_PHONE_DELETE_PROPERTY_USER_UDID, request.getString(PARAM_USER_ID));
+    params.put(WSConfig.WS_CRUD_PHONE_DELETE_PROPERTY_IDS, request.getString(PARAM_PHONE_ID_LIST));
 
-        NetworkConnection networkConnection = new NetworkConnection(context,
-                WSConfig.WS_CRUD_PHONE_DELETE_URL);
-        networkConnection.setParameters(params);
-        ConnectionResult result = networkConnection.execute();
+    NetworkConnection networkConnection =
+        new NetworkConnection(context, WSConfig.WS_CRUD_PHONE_DELETE_URL);
+    networkConnection.setParameters(params);
+    ConnectionResult result = networkConnection.execute();
 
-        long[] deletedPhoneIdArray = PhoneDeleteFactory.parseResult(result.body);
+    long[] deletedPhoneIdArray = PhoneDeleteFactory.parseResult(result.body);
 
-        Bundle bundle = new Bundle();
-        bundle.putLongArray(PoCRequestFactory.BUNDLE_EXTRA_PHONE_DELETE_DATA,
-                deletedPhoneIdArray);
-        return bundle;
-    }
+    Bundle bundle = new Bundle();
+    bundle.putLongArray(PoCRequestFactory.BUNDLE_EXTRA_PHONE_DELETE_DATA, deletedPhoneIdArray);
+    return bundle;
+  }
 }

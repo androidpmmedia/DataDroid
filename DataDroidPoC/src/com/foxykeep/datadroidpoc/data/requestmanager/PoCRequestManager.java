@@ -15,25 +15,26 @@ import android.content.Context;
 
 /**
  * This class is used as a proxy to call the Service. It provides easy-to-use methods to call the
- * service and manages the Intent creation. It also assures that a request will not be sent again if
+ * service and manages the Intent creation. It also assures that a request will not be sent again
+ * if
  * an exactly identical one is already in progress.
  *
  * @author Foxykeep
  */
 public final class PoCRequestManager extends RequestManager {
 
-    // Singleton management
-    private static PoCRequestManager sInstance;
+  // Singleton management
+  private static PoCRequestManager sInstance;
 
-    public synchronized static PoCRequestManager from(Context context) {
-        if (sInstance == null) {
-            sInstance = new PoCRequestManager(context);
-        }
-
-        return sInstance;
+  public synchronized static PoCRequestManager from(Context context) {
+    if (sInstance == null) {
+      sInstance = new PoCRequestManager(context);
     }
 
-    private PoCRequestManager(Context context) {
-        super(context, PoCRequestService.class);
-    }
+    return sInstance;
+  }
+
+  private PoCRequestManager(Context context) {
+    super(context, PoCRequestService.class);
+  }
 }

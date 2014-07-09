@@ -14,23 +14,23 @@ import android.content.ContentValues;
 
 public final class Person {
 
-    public String firstName;
-    public String lastName;
-    public String email;
-    public String city;
-    public int postalCode;
-    public int age;
-    public boolean isWorking;
+  public String firstName;
+  public String lastName;
+  public String email;
+  public String city;
+  public int postalCode;
+  public int age;
+  public boolean isWorking;
 
-    public ContentValues toContentValues() {
-        ContentValues cv = new ContentValues();
-        cv.put(DbPerson.Columns.FIRST_NAME.getName(), firstName);
-        cv.put(DbPerson.Columns.LAST_NAME.getName(), lastName);
-        cv.put(DbPerson.Columns.EMAIL.getName(), email);
-        cv.put(DbPerson.Columns.CITY.getName(), city);
-        cv.put(DbPerson.Columns.POSTAL_CODE.getName(), postalCode);
-        cv.put(DbPerson.Columns.AGE.getName(), age);
-        cv.put(DbPerson.Columns.IS_WORKING.getName(), isWorking);
-        return cv;
-    }
+  public ContentValues toContentValues() {
+    ContentValues cv = new ContentValues();
+    cv.put(DbPerson.Columns.FIRST_NAME.getName(), firstName);
+    cv.put(DbPerson.Columns.LAST_NAME.getName(), lastName);
+    cv.put(DbPerson.Columns.EMAIL.getName(), email);
+    cv.put(DbPerson.Columns.CITY.getName(), city);
+    cv.put(DbPerson.Columns.POSTAL_CODE.getName(), postalCode);
+    cv.put(DbPerson.Columns.AGE.getName(), age);
+    cv.put(DbPerson.Columns.IS_WORKING.getName(), isWorking);
+    return cv;
+  }
 }

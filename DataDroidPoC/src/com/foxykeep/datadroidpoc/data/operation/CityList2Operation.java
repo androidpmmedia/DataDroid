@@ -22,13 +22,13 @@ import android.os.Bundle;
 
 public final class CityList2Operation implements Operation {
 
-    @Override
-    public Bundle execute(Context context, Request request) throws ConnectionException,
-            DataException {
-        NetworkConnection networkConnection = new NetworkConnection(context,
-                WSConfig.WS_CITY_LIST_2_URL);
-        ConnectionResult result = networkConnection.execute();
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException {
+    NetworkConnection networkConnection =
+        new NetworkConnection(context, WSConfig.WS_CITY_LIST_2_URL);
+    ConnectionResult result = networkConnection.execute();
 
-        return CityListJsonFactory.parseResult(result.body);
-    }
+    return CityListJsonFactory.parseResult(result.body);
+  }
 }

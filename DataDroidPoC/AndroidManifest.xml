@@ -8,69 +8,69 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.foxykeep.datadroidpoc"
     android:versionCode="7"
-    android:versionName="2.1.2" >
+    android:versionName="2.1.2">
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+  <uses-sdk
+      android:minSdkVersion="8"
+      android:targetSdkVersion="17"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application
-        android:name=".DataDroidApplication"
-        android:allowBackup="true"
-        android:icon="@drawable/icon"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity
-            android:name=".ui.HomeActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+  <application
+      android:name=".DataDroidApplication"
+      android:allowBackup="true"
+      android:icon="@drawable/icon"
+      android:label="@string/app_name"
+      android:theme="@style/AppTheme">
+    <activity
+        android:name=".ui.HomeActivity"
+        android:label="@string/app_name">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.ws.PersonListActivity"
-            android:label="@string/person_list_title" />
-        <activity
-            android:name=".ui.ws.CityListActivity"
-            android:label="@string/city_list_title" />
-        <activity
-            android:name=".ui.ws.DoubleListActivity"
-            android:label="@string/double_list_title" />
-        <activity
-            android:name=".ui.requesttype.RequestTypesActivity"
-            android:label="@string/request_types_title" />
-        <activity
-            android:name=".ui.feature.AuthenticationActivity"
-            android:label="@string/authentication_title" />
-        <activity
-            android:name=".ui.feature.RefreshActivity"
-            android:label="@string/refresh_title" />
-        <activity
-            android:name=".ui.feature.CustomRequestExceptionActivity"
-            android:label="@string/custom_request_exception_title" />
-        <activity
-            android:name=".ui.crud.CrudSyncPhoneListActivity"
-            android:label="@string/crud_sync_phone_list_title" />
-        <activity
-            android:name=".ui.crud.CrudSyncPhoneViewActivity"
-            android:label="@string/crud_sync_phone_view_title" />
-        <activity android:name=".ui.crud.CrudSyncPhoneAddEditActivity" />
-        <activity
-            android:name=".ui.rss.RssFeedListActivity"
-            android:label="@string/rss_feed_list_title" />
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <activity
+        android:name=".ui.ws.PersonListActivity"
+        android:label="@string/person_list_title"/>
+    <activity
+        android:name=".ui.ws.CityListActivity"
+        android:label="@string/city_list_title"/>
+    <activity
+        android:name=".ui.ws.DoubleListActivity"
+        android:label="@string/double_list_title"/>
+    <activity
+        android:name=".ui.requesttype.RequestTypesActivity"
+        android:label="@string/request_types_title"/>
+    <activity
+        android:name=".ui.feature.AuthenticationActivity"
+        android:label="@string/authentication_title"/>
+    <activity
+        android:name=".ui.feature.RefreshActivity"
+        android:label="@string/refresh_title"/>
+    <activity
+        android:name=".ui.feature.CustomRequestExceptionActivity"
+        android:label="@string/custom_request_exception_title"/>
+    <activity
+        android:name=".ui.crud.CrudSyncPhoneListActivity"
+        android:label="@string/crud_sync_phone_list_title"/>
+    <activity
+        android:name=".ui.crud.CrudSyncPhoneViewActivity"
+        android:label="@string/crud_sync_phone_view_title"/>
+    <activity android:name=".ui.crud.CrudSyncPhoneAddEditActivity"/>
+    <activity
+        android:name=".ui.rss.RssFeedListActivity"
+        android:label="@string/rss_feed_list_title"/>
 
-        <service
-            android:name=".data.service.PoCRequestService"
-            android:exported="false" />
+    <service
+        android:name=".data.service.PoCRequestService"
+        android:exported="false"/>
 
-        <provider
-            android:name=".data.provider.PoCProvider"
-            android:authorities="com.foxykeep.datadroidpoc.provider.PoCProvider"
-            android:exported="false" />
-    </application>
+    <provider
+        android:name=".data.provider.PoCProvider"
+        android:authorities="com.foxykeep.datadroidpoc.provider.PoCProvider"
+        android:exported="false"/>
+  </application>
 
 </manifest>

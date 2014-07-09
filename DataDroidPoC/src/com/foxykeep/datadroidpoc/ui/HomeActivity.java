@@ -34,111 +34,113 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public final class HomeActivity extends FragmentActivity implements OnItemClickListener,
-        OnItemLongClickListener {
+public final class HomeActivity extends FragmentActivity
+    implements OnItemClickListener, OnItemLongClickListener {
 
-    private LayoutInflater mInflater;
+  private LayoutInflater mInflater;
 
-    private SampleListAdapter mListAdapter;
+  private SampleListAdapter mListAdapter;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    setContentView(R.layout.home);
+
+    mInflater = getLayoutInflater();
+
+    populateViews();
+  }
+
+  private void populateViews() {
+    ListView listView = (ListView) findViewById(android.R.id.list);
+    listView.setOnItemClickListener(this);
+    listView.setOnItemLongClickListener(this);
+
+    mListAdapter = new SampleListAdapter(this);
+    listView.setAdapter(mListAdapter);
+
+    populateAdapter();
+  }
+
+  private void populateAdapter() {
+    mListAdapter.setNotifyOnChange(false);
+
+    mListAdapter.add(
+        new Sample(R.string.home_person_list_title, R.string.home_person_list_description,
+            PersonListActivity.class));
+    mListAdapter.add(new Sample(R.string.home_city_list_title, R.string.home_city_list_description,
+        CityListActivity.class));
+    mListAdapter.add(new Sample(R.string.home_crud_phone_list_sync_title,
+        R.string.home_crud_phone_list_sync_description, CrudSyncPhoneListActivity.class));
+
+    mListAdapter.add(
+        new Sample(R.string.home_double_list_title, R.string.home_double_list_description,
+            DoubleListActivity.class));
+    mListAdapter.add(
+        new Sample(R.string.home_request_types_title, R.string.home_request_types_description,
+            RequestTypesActivity.class));
+    mListAdapter.add(
+        new Sample(R.string.home_authentication_title, R.string.home_authentication_description,
+            AuthenticationActivity.class));
+    mListAdapter.add(new Sample(R.string.home_refresh_title, R.string.home_refresh_description,
+        RefreshActivity.class));
+    mListAdapter.add(new Sample(R.string.home_custom_request_exception_title,
+        R.string.home_custom_request_exception_description, CustomRequestExceptionActivity.class));
+
+    mListAdapter.add(new Sample(R.string.home_rss_feed_title, R.string.home_rss_feed_description,
+        RssFeedListActivity.class));
+
+    mListAdapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    Sample sample = mListAdapter.getItem(position);
+
+    Intent intent = new Intent(this, sample.activityKlass);
+    startActivity(intent);
+  }
+
+  @Override
+  public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+    Sample sample = mListAdapter.getItem(position);
+
+    SampleDescriptionDialogFragment.show(this, sample.titleResId, sample.descriptionResId);
+    return true;
+  }
+
+  private final class SampleListAdapter extends ArrayAdapter<Sample> {
+
+    public SampleListAdapter(Context context) {
+      super(context, 0);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View getView(int position, View convertView, ViewGroup parent) {
+      TextView textView;
+      if (convertView == null) {
+        textView = (TextView) mInflater.inflate(android.R.layout.simple_list_item_1, null);
+      } else {
+        textView = (TextView) convertView;
+      }
 
-        setContentView(R.layout.home);
+      Sample sample = getItem(position);
+      textView.setText(sample.titleResId);
 
-        mInflater = getLayoutInflater();
-
-        populateViews();
+      return textView;
     }
+  }
 
-    private void populateViews() {
-        ListView listView = (ListView) findViewById(android.R.id.list);
-        listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(this);
+  private final class Sample {
+    public int titleResId;
+    public int descriptionResId;
+    public Class<? extends Activity> activityKlass;
 
-        mListAdapter = new SampleListAdapter(this);
-        listView.setAdapter(mListAdapter);
-
-        populateAdapter();
+    public Sample(int titleResId, int descriptionResId, Class<? extends Activity> activityKlass) {
+      this.titleResId = titleResId;
+      this.descriptionResId = descriptionResId;
+      this.activityKlass = activityKlass;
     }
-
-    private void populateAdapter() {
-        mListAdapter.setNotifyOnChange(false);
-
-        mListAdapter.add(new Sample(R.string.home_person_list_title,
-                R.string.home_person_list_description, PersonListActivity.class));
-        mListAdapter.add(new Sample(R.string.home_city_list_title,
-                R.string.home_city_list_description, CityListActivity.class));
-        mListAdapter.add(new Sample(R.string.home_crud_phone_list_sync_title,
-                R.string.home_crud_phone_list_sync_description, CrudSyncPhoneListActivity.class));
-
-        mListAdapter.add(new Sample(R.string.home_double_list_title,
-                R.string.home_double_list_description, DoubleListActivity.class));
-        mListAdapter.add(new Sample(R.string.home_request_types_title,
-                R.string.home_request_types_description, RequestTypesActivity.class));
-        mListAdapter.add(new Sample(R.string.home_authentication_title,
-                R.string.home_authentication_description, AuthenticationActivity.class));
-        mListAdapter.add(new Sample(R.string.home_refresh_title, R.string.home_refresh_description,
-                RefreshActivity.class));
-        mListAdapter.add(new Sample(R.string.home_custom_request_exception_title,
-                R.string.home_custom_request_exception_description,
-                CustomRequestExceptionActivity.class));
-
-        mListAdapter.add(new Sample(R.string.home_rss_feed_title,
-                R.string.home_rss_feed_description, RssFeedListActivity.class));
-
-        mListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Sample sample = mListAdapter.getItem(position);
-
-        Intent intent = new Intent(this, sample.activityKlass);
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        Sample sample = mListAdapter.getItem(position);
-
-        SampleDescriptionDialogFragment.show(this, sample.titleResId, sample.descriptionResId);
-        return true;
-    }
-
-    private final class SampleListAdapter extends ArrayAdapter<Sample> {
-
-        public SampleListAdapter(Context context) {
-            super(context, 0);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            TextView textView;
-            if (convertView == null) {
-                textView = (TextView) mInflater.inflate(android.R.layout.simple_list_item_1, null);
-            } else {
-                textView = (TextView) convertView;
-            }
-
-            Sample sample = getItem(position);
-            textView.setText(sample.titleResId);
-
-            return textView;
-        }
-    }
-
-    private final class Sample {
-        public int titleResId;
-        public int descriptionResId;
-        public Class<? extends Activity> activityKlass;
-
-        public Sample(int titleResId, int descriptionResId,
-                Class<? extends Activity> activityKlass) {
-            this.titleResId = titleResId;
-            this.descriptionResId = descriptionResId;
-            this.activityKlass = activityKlass;
-        }
-    }
+  }
 }

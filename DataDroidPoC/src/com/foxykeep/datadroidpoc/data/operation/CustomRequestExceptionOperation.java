@@ -24,28 +24,27 @@ import android.os.Bundle;
 /**
  * Sample WS call throwing a {@link CustomRequestException}.
  * <p>
- * Check {@link com.foxykeep.datadroidpoc.data.service.PoCRequestService#onCustomRequestException(Request, CustomRequestException)} to see how to
+ * Check {@link com.foxykeep.datadroidpoc.data.service.PoCRequestService#onCustomRequestException(Request,
+ * CustomRequestException)} to see how to
  * manage the thrown exception.
  */
 public class CustomRequestExceptionOperation implements Operation {
 
-    public static final String PARAM_WITH_EXCEPTION =
-            "com.foxykeep.datadroidpoc.extra.withException";
+  public static final String PARAM_WITH_EXCEPTION = "com.foxykeep.datadroidpoc.extra.withException";
 
-    @Override
-    public Bundle execute(Context context, Request request) throws ConnectionException,
-            DataException, CustomRequestException {
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException, CustomRequestException {
 
-        boolean withException = request.getBoolean(PARAM_WITH_EXCEPTION);
-        if (withException) {
-            throw new MyCustomRequestException();
-        }
-
-        NetworkConnection networkConnection = new NetworkConnection(context,
-                WSConfig.WS_CITY_LIST_2_URL);
-        ConnectionResult result = networkConnection.execute();
-
-        return CityListJsonFactory.parseResult(result.body);
+    boolean withException = request.getBoolean(PARAM_WITH_EXCEPTION);
+    if (withException) {
+      throw new MyCustomRequestException();
     }
 
+    NetworkConnection networkConnection =
+        new NetworkConnection(context, WSConfig.WS_CITY_LIST_2_URL);
+    ConnectionResult result = networkConnection.execute();
+
+    return CityListJsonFactory.parseResult(result.body);
+  }
 }

@@ -25,19 +25,18 @@ import java.util.HashMap;
 
 public final class CityListOperation implements Operation {
 
-    @Override
-    public Bundle execute(Context context, Request request) throws ConnectionException,
-            DataException {
-        // Add the version parameter to get the new output from the CityList WS
-        HashMap<String, String> parameterMap = new HashMap<String, String>();
-        parameterMap.put(WSConfig.WS_CITY_PROPERTY_VERSION, "2");
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException {
+    // Add the version parameter to get the new output from the CityList WS
+    HashMap<String, String> parameterMap = new HashMap<String, String>();
+    parameterMap.put(WSConfig.WS_CITY_PROPERTY_VERSION, "2");
 
-        NetworkConnection networkConnection = new NetworkConnection(context,
-                WSConfig.WS_CITY_LIST_URL);
-        networkConnection.setMethod(Method.POST);
-        networkConnection.setParameters(parameterMap);
-        ConnectionResult result = networkConnection.execute();
+    NetworkConnection networkConnection = new NetworkConnection(context, WSConfig.WS_CITY_LIST_URL);
+    networkConnection.setMethod(Method.POST);
+    networkConnection.setParameters(parameterMap);
+    ConnectionResult result = networkConnection.execute();
 
-        return CityListJsonFactory.parseResult(result.body);
-    }
+    return CityListJsonFactory.parseResult(result.body);
+  }
 }

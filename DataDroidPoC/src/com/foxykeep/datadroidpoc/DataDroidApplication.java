@@ -16,11 +16,11 @@ import org.acra.annotation.ReportsCrashes;
 @ReportsCrashes(formKey = "dDhTMGVBTVR3XzhPRWdTckhoeW15VWc6MA")
 public class DataDroidApplication extends Application {
 
-    @Override
-    public void onCreate() {
-        if (!BuildConfig.DEBUG) {
-            ACRA.init(this);
-        }
-        super.onCreate();
+  @Override
+  public void onCreate() {
+    if (!BuildConfig.DEBUG) {
+      ACRA.init(this);
     }
+    super.onCreate();
+  }
 }

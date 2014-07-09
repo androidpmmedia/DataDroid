@@ -27,337 +27,337 @@ import java.util.ArrayList;
  */
 public final class PoCProvider extends ContentProvider {
 
-    private static final String LOG_TAG = PoCProvider.class.getSimpleName();
+  private static final String LOG_TAG = PoCProvider.class.getSimpleName();
 
-    private static final boolean ACTIVATE_ALL_LOGS = false;
+  private static final boolean ACTIVATE_ALL_LOGS = false;
 
-    protected static final String DATABASE_NAME = "PoCProvider.db";
+  protected static final String DATABASE_NAME = "PoCProvider.db";
 
-    public static final String AUTHORITY = "com.foxykeep.datadroidpoc.provider.PoCProvider";
+  public static final String AUTHORITY = "com.foxykeep.datadroidpoc.provider.PoCProvider";
 
-    static {
-        Uri.parse("content://" + AUTHORITY + "/integrityCheck");
+  static {
+    Uri.parse("content://" + AUTHORITY + "/integrityCheck");
+  }
+
+  // Version 1 : Creation of the database
+  public static final int DATABASE_VERSION = 1;
+
+  private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+  private enum UriType {
+    DB_PERSON(DbPerson.TABLE_NAME, DbPerson.TABLE_NAME, DbPerson.TYPE_ELEM_TYPE),
+    DB_PERSON_ID(DbPerson.TABLE_NAME + "/#", DbPerson.TABLE_NAME, DbPerson.TYPE_DIR_TYPE);
+
+    private String mTableName;
+    private String mType;
+
+    UriType(String matchPath, String tableName, String type) {
+      mTableName = tableName;
+      mType = type;
+      sUriMatcher.addURI(AUTHORITY, matchPath, ordinal());
     }
 
-    // Version 1 : Creation of the database
-    public static final int DATABASE_VERSION = 1;
-
-    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-	private enum UriType {
-        DB_PERSON(DbPerson.TABLE_NAME, DbPerson.TABLE_NAME, DbPerson.TYPE_ELEM_TYPE),
-        DB_PERSON_ID(DbPerson.TABLE_NAME + "/#", DbPerson.TABLE_NAME, DbPerson.TYPE_DIR_TYPE);
-
-        private String mTableName;
-        private String mType;
-
-        UriType(String matchPath, String tableName, String type) {
-            mTableName = tableName;
-            mType = type;
-            sUriMatcher.addURI(AUTHORITY, matchPath, ordinal());
-        }
-
-        String getTableName() {
-            return mTableName;
-        }
-
-        String getType() {
-            return mType;
-        }
+    String getTableName() {
+      return mTableName;
     }
 
-    static {
-        // Ensures UriType is initialized
-        UriType.values();
+    String getType() {
+      return mType;
+    }
+  }
+
+  static {
+    // Ensures UriType is initialized
+    UriType.values();
+  }
+
+  private static UriType matchUri(Uri uri) {
+    int match = sUriMatcher.match(uri);
+    if (match < 0) {
+      throw new IllegalArgumentException("Unknown URI " + uri);
+    }
+    return UriType.class.getEnumConstants()[match];
+  }
+
+  private SQLiteDatabase mDatabase;
+
+  @SuppressWarnings("deprecation")
+  public synchronized SQLiteDatabase getDatabase(Context context) {
+    // Always return the cached database, if we've got one
+    if (mDatabase == null || !mDatabase.isOpen()) {
+      DatabaseHelper helper = new DatabaseHelper(context, DATABASE_NAME);
+      mDatabase = helper.getWritableDatabase();
+      if (mDatabase != null) {
+        mDatabase.setLockingEnabled(true);
+      }
     }
 
-    private static UriType matchUri(Uri uri) {
-        int match = sUriMatcher.match(uri);
-        if (match < 0) {
-            throw new IllegalArgumentException("Unknown URI " + uri);
-        }
-        return UriType.class.getEnumConstants()[match];
-    }
+    return mDatabase;
+  }
 
-    private SQLiteDatabase mDatabase;
+  private class DatabaseHelper extends SQLiteOpenHelper {
 
-    @SuppressWarnings("deprecation")
-    public synchronized SQLiteDatabase getDatabase(Context context) {
-        // Always return the cached database, if we've got one
-        if (mDatabase == null || !mDatabase.isOpen()) {
-            DatabaseHelper helper = new DatabaseHelper(context, DATABASE_NAME);
-            mDatabase = helper.getWritableDatabase();
-            if (mDatabase != null) {
-                mDatabase.setLockingEnabled(true);
-            }
-		}
-
-        return mDatabase;
-    }
-
-    private class DatabaseHelper extends SQLiteOpenHelper {
-
-        DatabaseHelper(Context context, String name) {
-            super(context, name, null, DATABASE_VERSION);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            Log.d(LOG_TAG, "Creating PoCProvider database");
-
-            // Create all tables here; each class has its own method
-            if (ACTIVATE_ALL_LOGS) {
-                Log.d(LOG_TAG, "DbPerson | createTable start");
-            }
-            DbPerson.createTable(db);
-            if (ACTIVATE_ALL_LOGS) {
-                Log.d(LOG_TAG, "DbPerson | createTable end");
-            }
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-            // Upgrade all tables here; each class has its own method
-            if (ACTIVATE_ALL_LOGS) {
-                Log.d(LOG_TAG, "DbPerson | upgradeTable start");
-            }
-            DbPerson.upgradeTable(db, oldVersion, newVersion);
-            if (ACTIVATE_ALL_LOGS) {
-                Log.d(LOG_TAG, "DbPerson | upgradeTable end");
-            }
-        }
-
-        @Override
-        public void onOpen(SQLiteDatabase db) {
-        }
+    DatabaseHelper(Context context, String name) {
+      super(context, name, null, DATABASE_VERSION);
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public void onCreate(SQLiteDatabase db) {
+      Log.d(LOG_TAG, "Creating PoCProvider database");
 
-        UriType uriType = matchUri(uri);
-        Context context = getContext();
-
-        // Pick the correct database for this operation
-        SQLiteDatabase db = getDatabase(context);
-        String id;
-
-        if (ACTIVATE_ALL_LOGS) {
-            Log.d(LOG_TAG, "delete: uri=" + uri + ", match is " + uriType.name());
-        }
-
-        int result = -1;
-
-        switch (uriType) {
-            case DB_PERSON_ID:
-                id = uri.getPathSegments().get(1);
-                result = db.delete(uriType.getTableName(), whereWithId(selection),
-                        addIdToSelectionArgs(id, selectionArgs));
-                break;
-            case DB_PERSON:
-                result = db.delete(uriType.getTableName(), selection, selectionArgs);
-                break;
-        }
-
-        getContext().getContentResolver().notifyChange(uri, null);
-        return result;
+      // Create all tables here; each class has its own method
+      if (ACTIVATE_ALL_LOGS) {
+        Log.d(LOG_TAG, "DbPerson | createTable start");
+      }
+      DbPerson.createTable(db);
+      if (ACTIVATE_ALL_LOGS) {
+        Log.d(LOG_TAG, "DbPerson | createTable end");
+      }
     }
 
     @Override
-    public String getType(Uri uri) {
-        return matchUri(uri).getType();
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+      // Upgrade all tables here; each class has its own method
+      if (ACTIVATE_ALL_LOGS) {
+        Log.d(LOG_TAG, "DbPerson | upgradeTable start");
+      }
+      DbPerson.upgradeTable(db, oldVersion, newVersion);
+      if (ACTIVATE_ALL_LOGS) {
+        Log.d(LOG_TAG, "DbPerson | upgradeTable end");
+      }
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public void onOpen(SQLiteDatabase db) {
+    }
+  }
 
-        UriType uriType = matchUri(uri);
-        Context context = getContext();
+  @Override
+  public int delete(Uri uri, String selection, String[] selectionArgs) {
 
-        // Pick the correct database for this operation
-        SQLiteDatabase db = getDatabase(context);
-        long id;
+    UriType uriType = matchUri(uri);
+    Context context = getContext();
 
-        if (ACTIVATE_ALL_LOGS) {
-            Log.d(LOG_TAG, "insert: uri=" + uri + ", match is " + uriType.name());
-        }
+    // Pick the correct database for this operation
+    SQLiteDatabase db = getDatabase(context);
+    String id;
 
-        Uri resultUri;
-
-        switch (uriType) {
-            case DB_PERSON:
-                id = db.insert(uriType.getTableName(), "foo", values);
-                resultUri = id == -1 ? null : ContentUris.withAppendedId(uri, id);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
-        }
-
-        // Notify with the base uri, not the new uri (nobody is watching a new
-        // record)
-        getContext().getContentResolver().notifyChange(uri, null);
-        return resultUri;
+    if (ACTIVATE_ALL_LOGS) {
+      Log.d(LOG_TAG, "delete: uri=" + uri + ", match is " + uriType.name());
     }
 
-    @Override
-    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations) 
-            throws OperationApplicationException {
-        SQLiteDatabase db = getDatabase(getContext());
-        db.beginTransaction();
-        try {
-            int numOperations = operations.size();
-            ContentProviderResult[] results = new ContentProviderResult[numOperations];
-            for (int i = 0; i < numOperations; i++) {
-                results[i] = operations.get(i).apply(this, results, i);
-                db.yieldIfContendedSafely();
-            }
-            db.setTransactionSuccessful();
-            return results;
-        } finally {
-            db.endTransaction();
-        }
+    int result = -1;
+
+    switch (uriType) {
+      case DB_PERSON_ID:
+        id = uri.getPathSegments().get(1);
+        result = db.delete(uriType.getTableName(), whereWithId(selection),
+            addIdToSelectionArgs(id, selectionArgs));
+        break;
+      case DB_PERSON:
+        result = db.delete(uriType.getTableName(), selection, selectionArgs);
+        break;
     }
 
-    @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    getContext().getContentResolver().notifyChange(uri, null);
+    return result;
+  }
 
-        UriType uriType = matchUri(uri);
-        Context context = getContext();
+  @Override
+  public String getType(Uri uri) {
+    return matchUri(uri).getType();
+  }
 
-        // Pick the correct database for this operation
-        SQLiteDatabase db = getDatabase(context);
+  @Override
+  public Uri insert(Uri uri, ContentValues values) {
 
-        if (ACTIVATE_ALL_LOGS) {
-            Log.d(LOG_TAG, "bulkInsert: uri=" + uri + ", match is " + uriType.name());
-        }
+    UriType uriType = matchUri(uri);
+    Context context = getContext();
 
-        int numberInserted = 0;
-        SQLiteStatement insertStmt;
+    // Pick the correct database for this operation
+    SQLiteDatabase db = getDatabase(context);
+    long id;
 
-        db.beginTransaction();
-        try {
-            switch (uriType) {
-                case DB_PERSON:
-                    insertStmt = db.compileStatement(DbPerson.getBulkInsertString());
-                    for (ContentValues value : values) {
-                        DbPerson.bindValuesInBulkInsert(insertStmt, value);
-                        insertStmt.execute();
-                        insertStmt.clearBindings();
-                    }
-                    insertStmt.close();
-                    db.setTransactionSuccessful();
-                    numberInserted = values.length;
-
-			        if (ACTIVATE_ALL_LOGS) {
-			            Log.d(LOG_TAG, "bulkInsert: uri=" + uri + " | nb inserts : " + numberInserted);
-			        }
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Unknown URI " + uri);
-            }
-        } finally {
-            db.endTransaction();
-        }
-
-        // Notify with the base uri, not the new uri (nobody is watching a new
-        // record)
-        context.getContentResolver().notifyChange(uri, null);
-        return numberInserted;
+    if (ACTIVATE_ALL_LOGS) {
+      Log.d(LOG_TAG, "insert: uri=" + uri + ", match is " + uriType.name());
     }
 
-    @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, 
-            String sortOrder) {
+    Uri resultUri;
 
-        Cursor c = null;
-        Uri notificationUri = PoCContent.CONTENT_URI;
-        UriType uriType = matchUri(uri);
-        Context context = getContext();
-        // Pick the correct database for this operation
-        SQLiteDatabase db = getDatabase(context);
-        String id;
-
-        if (ACTIVATE_ALL_LOGS) {
-            Log.d(LOG_TAG, "query: uri=" + uri + ", match is " + uriType.name());
-        }
-
-        switch (uriType) {
-            case DB_PERSON_ID:
-                id = uri.getPathSegments().get(1);
-                c = db.query(uriType.getTableName(), projection, whereWithId(selection),
-                        addIdToSelectionArgs(id, selectionArgs), null, null, sortOrder);
-                break;
-            case DB_PERSON:
-                c = db.query(uriType.getTableName(), projection, selection, selectionArgs,
-                        null, null, sortOrder);
-                break;
-        }
-
-        if ((c != null) && !isTemporary()) {
-            c.setNotificationUri(getContext().getContentResolver(), notificationUri);
-        }
-        return c;
+    switch (uriType) {
+      case DB_PERSON:
+        id = db.insert(uriType.getTableName(), "foo", values);
+        resultUri = id == -1 ? null : ContentUris.withAppendedId(uri, id);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown URI " + uri);
     }
 
-    private String whereWithId(String selection) {
-        StringBuilder sb = new StringBuilder(256);
-        sb.append(BaseColumns._ID);
-        sb.append(" = ?");
-        if (selection != null) {
-            sb.append(" AND (");
-            sb.append(selection);
-            sb.append(')');
-        }
-        return sb.toString();
+    // Notify with the base uri, not the new uri (nobody is watching a new
+    // record)
+    getContext().getContentResolver().notifyChange(uri, null);
+    return resultUri;
+  }
+
+  @Override
+  public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
+      throws OperationApplicationException {
+    SQLiteDatabase db = getDatabase(getContext());
+    db.beginTransaction();
+    try {
+      int numOperations = operations.size();
+      ContentProviderResult[] results = new ContentProviderResult[numOperations];
+      for (int i = 0; i < numOperations; i++) {
+        results[i] = operations.get(i).apply(this, results, i);
+        db.yieldIfContendedSafely();
+      }
+      db.setTransactionSuccessful();
+      return results;
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  @Override
+  public int bulkInsert(Uri uri, ContentValues[] values) {
+
+    UriType uriType = matchUri(uri);
+    Context context = getContext();
+
+    // Pick the correct database for this operation
+    SQLiteDatabase db = getDatabase(context);
+
+    if (ACTIVATE_ALL_LOGS) {
+      Log.d(LOG_TAG, "bulkInsert: uri=" + uri + ", match is " + uriType.name());
     }
 
-    private String[] addIdToSelectionArgs(String id, String[] selectionArgs) {
+    int numberInserted = 0;
+    SQLiteStatement insertStmt;
 
-        if (selectionArgs == null) {
-            return new String[] { id };
-        }
+    db.beginTransaction();
+    try {
+      switch (uriType) {
+        case DB_PERSON:
+          insertStmt = db.compileStatement(DbPerson.getBulkInsertString());
+          for (ContentValues value : values) {
+            DbPerson.bindValuesInBulkInsert(insertStmt, value);
+            insertStmt.execute();
+            insertStmt.clearBindings();
+          }
+          insertStmt.close();
+          db.setTransactionSuccessful();
+          numberInserted = values.length;
 
-        int length = selectionArgs.length;
-        String[] newSelectionArgs = new String[length + 1];
-        newSelectionArgs[0] = id;
-        System.arraycopy(selectionArgs, 0, newSelectionArgs, 1, length);
-        return newSelectionArgs;
+          if (ACTIVATE_ALL_LOGS) {
+            Log.d(LOG_TAG, "bulkInsert: uri=" + uri + " | nb inserts : " + numberInserted);
+          }
+          break;
+
+        default:
+          throw new IllegalArgumentException("Unknown URI " + uri);
+      }
+    } finally {
+      db.endTransaction();
     }
 
-    @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    // Notify with the base uri, not the new uri (nobody is watching a new
+    // record)
+    context.getContentResolver().notifyChange(uri, null);
+    return numberInserted;
+  }
 
-        UriType uriType = matchUri(uri);
-        Context context = getContext();
+  @Override
+  public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+      String sortOrder) {
 
-        // Pick the correct database for this operation
-        SQLiteDatabase db = getDatabase(context);
+    Cursor c = null;
+    Uri notificationUri = PoCContent.CONTENT_URI;
+    UriType uriType = matchUri(uri);
+    Context context = getContext();
+    // Pick the correct database for this operation
+    SQLiteDatabase db = getDatabase(context);
+    String id;
 
-        if (ACTIVATE_ALL_LOGS) {
-            Log.d(LOG_TAG, "update: uri=" + uri + ", match is " + uriType.name());
-        }
-
-        int result = -1;
-
-        switch (uriType) {
-            case DB_PERSON_ID:
-                String id = uri.getPathSegments().get(1);
-                result = db.update(uriType.getTableName(), values, whereWithId(selection),
-                    addIdToSelectionArgs(id, selectionArgs));
-                break;
-            case DB_PERSON:
-                result = db.update(uriType.getTableName(), values, selection, selectionArgs);
-                break;
-        }
-
-        getContext().getContentResolver().notifyChange(uri, null);
-        return result;
+    if (ACTIVATE_ALL_LOGS) {
+      Log.d(LOG_TAG, "query: uri=" + uri + ", match is " + uriType.name());
     }
 
-    @Override
-    public boolean onCreate() {
-        return true;
+    switch (uriType) {
+      case DB_PERSON_ID:
+        id = uri.getPathSegments().get(1);
+        c = db.query(uriType.getTableName(), projection, whereWithId(selection),
+            addIdToSelectionArgs(id, selectionArgs), null, null, sortOrder);
+        break;
+      case DB_PERSON:
+        c = db.query(uriType.getTableName(), projection, selection, selectionArgs, null, null,
+            sortOrder);
+        break;
     }
+
+    if ((c != null) && !isTemporary()) {
+      c.setNotificationUri(getContext().getContentResolver(), notificationUri);
+    }
+    return c;
+  }
+
+  private String whereWithId(String selection) {
+    StringBuilder sb = new StringBuilder(256);
+    sb.append(BaseColumns._ID);
+    sb.append(" = ?");
+    if (selection != null) {
+      sb.append(" AND (");
+      sb.append(selection);
+      sb.append(')');
+    }
+    return sb.toString();
+  }
+
+  private String[] addIdToSelectionArgs(String id, String[] selectionArgs) {
+
+    if (selectionArgs == null) {
+      return new String[] { id };
+    }
+
+    int length = selectionArgs.length;
+    String[] newSelectionArgs = new String[length + 1];
+    newSelectionArgs[0] = id;
+    System.arraycopy(selectionArgs, 0, newSelectionArgs, 1, length);
+    return newSelectionArgs;
+  }
+
+  @Override
+  public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
+    UriType uriType = matchUri(uri);
+    Context context = getContext();
+
+    // Pick the correct database for this operation
+    SQLiteDatabase db = getDatabase(context);
+
+    if (ACTIVATE_ALL_LOGS) {
+      Log.d(LOG_TAG, "update: uri=" + uri + ", match is " + uriType.name());
+    }
+
+    int result = -1;
+
+    switch (uriType) {
+      case DB_PERSON_ID:
+        String id = uri.getPathSegments().get(1);
+        result = db.update(uriType.getTableName(), values, whereWithId(selection),
+            addIdToSelectionArgs(id, selectionArgs));
+        break;
+      case DB_PERSON:
+        result = db.update(uriType.getTableName(), values, selection, selectionArgs);
+        break;
+    }
+
+    getContext().getContentResolver().notifyChange(uri, null);
+    return result;
+  }
+
+  @Override
+  public boolean onCreate() {
+    return true;
+  }
 }

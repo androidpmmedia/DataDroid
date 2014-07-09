@@ -20,16 +20,16 @@ import android.content.Intent;
  */
 public final class SkeletonService extends RequestService {
 
-    // TODO by default only one concurrent worker thread will be used. If you want to change that,
-    // override the getMaximumNumberOfThreads() method
+  // TODO by default only one concurrent worker thread will be used. If you want to change that,
+  // override the getMaximumNumberOfThreads() method
 
-    @Override
-    public Operation getOperationForType(int requestType) {
-        switch (requestType) {
-            // TODO : Add a case per worker where you do the following things :
-            // - create the corresponding Operation and return it
-            // See the PoC if you need more information.
-        }
-        return null;
+  @Override
+  public Operation getOperationForType(int requestType) {
+    switch (requestType) {
+      // TODO : Add a case per worker where you do the following things :
+      // - create the corresponding Operation and return it
+      // See the PoC if you need more information.
     }
+    return null;
+  }
 }

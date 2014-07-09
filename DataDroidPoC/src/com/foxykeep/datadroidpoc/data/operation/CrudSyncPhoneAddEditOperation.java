@@ -26,33 +26,33 @@ import java.util.HashMap;
 
 public final class CrudSyncPhoneAddEditOperation implements Operation {
 
-    public static final String PARAM_USER_ID = "com.foxykeep.datadroidpoc.extra.userId";
-    public static final String PARAM_PHONE = "com.foxykeep.datadroidpoc.extra.phone";
+  public static final String PARAM_USER_ID = "com.foxykeep.datadroidpoc.extra.userId";
+  public static final String PARAM_PHONE = "com.foxykeep.datadroidpoc.extra.phone";
 
-    @Override
-    public Bundle execute(Context context, Request request) throws ConnectionException,
-            DataException {
-        HashMap<String, String> params = new HashMap<String, String>();
-        Phone phone = (Phone) request.getParcelable(PARAM_PHONE);
-        params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_USER_UDID,
-                request.getString(PARAM_USER_ID));
-        params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_ID, String.valueOf(phone.serverId));
-        params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_NAME, phone.name);
-        params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_MANUFACTURER, phone.manufacturer);
-        params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_ANDROID_VERSION, phone.androidVersion);
-        params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_SCREEN_SIZE,
-                String.valueOf(phone.screenSize));
-        params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_PRICE, String.valueOf(phone.price));
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException {
+    HashMap<String, String> params = new HashMap<String, String>();
+    Phone phone = (Phone) request.getParcelable(PARAM_PHONE);
+    params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_USER_UDID,
+        request.getString(PARAM_USER_ID));
+    params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_ID, String.valueOf(phone.serverId));
+    params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_NAME, phone.name);
+    params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_MANUFACTURER, phone.manufacturer);
+    params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_ANDROID_VERSION, phone.androidVersion);
+    params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_SCREEN_SIZE,
+        String.valueOf(phone.screenSize));
+    params.put(WSConfig.WS_CRUD_PHONE_ADD_EDIT_PROPERTY_PRICE, String.valueOf(phone.price));
 
-        NetworkConnection networkConnection = new NetworkConnection(context,
-                WSConfig.WS_CRUD_PHONE_ADD_EDIT_URL);
-        networkConnection.setParameters(params);
-        ConnectionResult result = networkConnection.execute();
+    NetworkConnection networkConnection =
+        new NetworkConnection(context, WSConfig.WS_CRUD_PHONE_ADD_EDIT_URL);
+    networkConnection.setParameters(params);
+    ConnectionResult result = networkConnection.execute();
 
-        Phone serverPhone = PhoneAddEditFactory.parseResult(result.body);
+    Phone serverPhone = PhoneAddEditFactory.parseResult(result.body);
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(PoCRequestFactory.BUNDLE_EXTRA_PHONE_ADD_EDIT_DATA, serverPhone);
-        return bundle;
-    }
+    Bundle bundle = new Bundle();
+    bundle.putParcelable(PoCRequestFactory.BUNDLE_EXTRA_PHONE_ADD_EDIT_DATA, serverPhone);
+    return bundle;
+  }
 }

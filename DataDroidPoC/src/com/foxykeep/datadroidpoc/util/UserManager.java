@@ -17,21 +17,20 @@ import java.util.UUID;
 
 public final class UserManager {
 
-    private UserManager() {
-        // No public constructor
+  private UserManager() {
+    // No public constructor
+  }
+
+  public static String getUserId(Context context) {
+    SharedPreferences sharedPrefs =
+        context.getSharedPreferences(SharedPrefsConfig.SHARED_PREFS_FILENAME, Context.MODE_PRIVATE);
+    String userId = sharedPrefs.getString(SharedPrefsConfig.SHARED_PREFS_USER_ID, null);
+
+    if (userId == null) {
+      userId = UUID.randomUUID().toString();
+      sharedPrefs.edit().putString(SharedPrefsConfig.SHARED_PREFS_USER_ID, userId).commit();
     }
 
-    public static String getUserId(Context context) {
-        SharedPreferences sharedPrefs = context.getSharedPreferences(
-                SharedPrefsConfig.SHARED_PREFS_FILENAME,
-                Context.MODE_PRIVATE);
-        String userId = sharedPrefs.getString(SharedPrefsConfig.SHARED_PREFS_USER_ID, null);
-
-        if (userId == null) {
-            userId = UUID.randomUUID().toString();
-            sharedPrefs.edit().putString(SharedPrefsConfig.SHARED_PREFS_USER_ID, userId).commit();
-        }
-
-        return userId;
-    }
+    return userId;
+  }
 }

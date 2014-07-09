@@ -19,33 +19,30 @@ import org.json.JSONObject;
 
 public final class PhoneAddEditFactory {
 
-    private static final String TAG = PhoneAddEditFactory.class.getSimpleName();
+  private static final String TAG = PhoneAddEditFactory.class.getSimpleName();
 
-    private PhoneAddEditFactory() {
-        // No public constructor
+  private PhoneAddEditFactory() {
+    // No public constructor
+  }
+
+  public static Phone parseResult(String wsResponse) throws DataException {
+    Phone phone = new Phone();
+
+    try {
+      JSONObject parser = new JSONObject(wsResponse);
+      JSONObject jsonPhone = parser.getJSONObject(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_PHONE);
+
+      phone.serverId = jsonPhone.getLong(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_ID);
+      phone.name = jsonPhone.getString(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_NAME);
+      phone.manufacturer = jsonPhone.getString(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_MANUFACTURER);
+      phone.androidVersion = jsonPhone.getString(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_ANDROID_VERSION);
+      phone.screenSize = jsonPhone.getDouble(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_SCREEN_SIZE);
+      phone.price = jsonPhone.getInt(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_PRICE);
+    } catch (JSONException e) {
+      Log.e(TAG, "JSONException", e);
+      throw new DataException(e);
     }
 
-    public static Phone parseResult(String wsResponse) throws DataException {
-        Phone phone = new Phone();
-
-        try {
-            JSONObject parser = new JSONObject(wsResponse);
-            JSONObject jsonPhone = parser
-                    .getJSONObject(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_PHONE);
-
-            phone.serverId = jsonPhone.getLong(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_ID);
-            phone.name = jsonPhone.getString(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_NAME);
-            phone.manufacturer = jsonPhone.getString(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_MANUFACTURER);
-            phone.androidVersion = jsonPhone
-                    .getString(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_ANDROID_VERSION);
-            phone.screenSize = jsonPhone.getDouble(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_SCREEN_SIZE);
-            phone.price = jsonPhone.getInt(JSONTag.CRUD_PHONE_ADD_EDIT_ELEM_PRICE);
-        } catch (JSONException e) {
-            Log.e(TAG, "JSONException", e);
-            throw new DataException(e);
-        }
-
-        return phone;
-    }
-
+    return phone;
+  }
 }

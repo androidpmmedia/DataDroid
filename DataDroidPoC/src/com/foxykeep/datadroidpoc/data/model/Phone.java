@@ -13,46 +13,46 @@ import android.os.Parcelable;
 
 public final class Phone implements Parcelable {
 
-    public long serverId;
-    public String name;
-    public String manufacturer;
-    public String androidVersion;
-    public double screenSize;
-    public int price;
+  public long serverId;
+  public String name;
+  public String manufacturer;
+  public String androidVersion;
+  public double screenSize;
+  public int price;
 
-    public Phone() {}
+  public Phone() {
+  }
 
-    // Parcelable management
-    private Phone(Parcel in) {
-        serverId = in.readLong();
-        name = in.readString();
-        manufacturer = in.readString();
-        androidVersion = in.readString();
-        screenSize = in.readDouble();
-        price = in.readInt();
+  // Parcelable management
+  private Phone(Parcel in) {
+    serverId = in.readLong();
+    name = in.readString();
+    manufacturer = in.readString();
+    androidVersion = in.readString();
+    screenSize = in.readDouble();
+    price = in.readInt();
+  }
+
+  public int describeContents() {
+    return 0;
+  }
+
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeLong(serverId);
+    dest.writeString(name);
+    dest.writeString(manufacturer);
+    dest.writeString(androidVersion);
+    dest.writeDouble(screenSize);
+    dest.writeInt(price);
+  }
+
+  public static final Parcelable.Creator<Phone> CREATOR = new Parcelable.Creator<Phone>() {
+    public Phone createFromParcel(Parcel in) {
+      return new Phone(in);
     }
 
-    public int describeContents() {
-        return 0;
+    public Phone[] newArray(int size) {
+      return new Phone[size];
     }
-
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(serverId);
-        dest.writeString(name);
-        dest.writeString(manufacturer);
-        dest.writeString(androidVersion);
-        dest.writeDouble(screenSize);
-        dest.writeInt(price);
-
-    }
-
-    public static final Parcelable.Creator<Phone> CREATOR = new Parcelable.Creator<Phone>() {
-        public Phone createFromParcel(Parcel in) {
-            return new Phone(in);
-        }
-
-        public Phone[] newArray(int size) {
-            return new Phone[size];
-        }
-    };
+  };
 }

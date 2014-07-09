@@ -27,25 +27,24 @@ import java.util.HashMap;
 
 public final class CrudSyncPhoneListOperation implements Operation {
 
-    public static final String PARAM_USER_ID = "com.foxykeep.datadroidpoc.extra.userId";
+  public static final String PARAM_USER_ID = "com.foxykeep.datadroidpoc.extra.userId";
 
-    @Override
-    public Bundle execute(Context context, Request request) throws ConnectionException,
-            DataException {
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(WSConfig.WS_CRUD_PHONE_LIST_PROPERTY_USER_UDID,
-                request.getString(PARAM_USER_ID));
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException {
+    HashMap<String, String> params = new HashMap<String, String>();
+    params.put(WSConfig.WS_CRUD_PHONE_LIST_PROPERTY_USER_UDID, request.getString(PARAM_USER_ID));
 
-        NetworkConnection networkConnection = new NetworkConnection(context,
-                WSConfig.WS_CRUD_PHONE_LIST_URL);
-        networkConnection.setParameters(params);
+    NetworkConnection networkConnection =
+        new NetworkConnection(context, WSConfig.WS_CRUD_PHONE_LIST_URL);
+    networkConnection.setParameters(params);
 
-        ConnectionResult result = networkConnection.execute();
+    ConnectionResult result = networkConnection.execute();
 
-        ArrayList<Phone> phoneList = PhoneListFactory.parseResult(result.body);
+    ArrayList<Phone> phoneList = PhoneListFactory.parseResult(result.body);
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(PoCRequestFactory.BUNDLE_EXTRA_PHONE_LIST, phoneList);
-        return bundle;
-    }
+    Bundle bundle = new Bundle();
+    bundle.putParcelableArrayList(PoCRequestFactory.BUNDLE_EXTRA_PHONE_LIST, phoneList);
+    return bundle;
+  }
 }

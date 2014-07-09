@@ -23,25 +23,24 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 
 public class AuthenticationOperation implements Operation {
 
-    public static final String PARAM_WITH_AUTHENTICATE =
-            "com.foxykeep.datadroidpoc.extra.authenticate";
+  public static final String PARAM_WITH_AUTHENTICATE =
+      "com.foxykeep.datadroidpoc.extra.authenticate";
 
-    private static final String LOGIN = "admin";
-    private static final String PASSWD = "admin"; // Worst password ever \o/
+  private static final String LOGIN = "admin";
+  private static final String PASSWD = "admin"; // Worst password ever \o/
 
-    @Override
-    public Bundle execute(Context context, Request request) throws ConnectionException,
-            DataException {
-        NetworkConnection networkConnection = new NetworkConnection(context,
-                WSConfig.WS_AUTHENTICATION_URL);
-        if (request.getBoolean(PARAM_WITH_AUTHENTICATE)) {
-            networkConnection.setCredentials(new UsernamePasswordCredentials(LOGIN, PASSWD));
-        }
-        ConnectionResult result = networkConnection.execute();
-
-        Bundle bundle = new Bundle();
-        bundle.putString(PoCRequestFactory.BUNDLE_EXTRA_AUTHENTICATION_RESULT, result.body);
-        return bundle;
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException {
+    NetworkConnection networkConnection =
+        new NetworkConnection(context, WSConfig.WS_AUTHENTICATION_URL);
+    if (request.getBoolean(PARAM_WITH_AUTHENTICATE)) {
+      networkConnection.setCredentials(new UsernamePasswordCredentials(LOGIN, PASSWD));
     }
+    ConnectionResult result = networkConnection.execute();
 
+    Bundle bundle = new Bundle();
+    bundle.putString(PoCRequestFactory.BUNDLE_EXTRA_AUTHENTICATION_RESULT, result.body);
+    return bundle;
+  }
 }

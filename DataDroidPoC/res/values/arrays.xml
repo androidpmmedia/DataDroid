@@ -7,25 +7,25 @@
 -->
 <resources>
 
-    <string-array name="return_format">
-        <item>XML</item>
-        <item>JSON</item>
-    </string-array>
-    <string-array name="rss_feed_url">
-        <item>http://www.datadroidlib.com/feed</item>
-        <item>http://android.foxykeep.com/feed</item>
-        <item>http://feedproxy.google.com/TechCrunch</item>
-    </string-array>
-    <string-array name="rss_feed_name">
-        <item>DataDroid</item>
-        <item>Foxykeep on Android</item>
-        <item>TechCrunch</item>
-    </string-array>
-    <string-array name="request_types">
-        <item>GET</item>
-        <item>POST</item>
-        <item>PUT</item>
-        <item>DELETE</item>
-    </string-array>
+  <string-array name="return_format">
+    <item>XML</item>
+    <item>JSON</item>
+  </string-array>
+  <string-array name="rss_feed_url">
+    <item>http://www.datadroidlib.com/feed</item>
+    <item>http://android.foxykeep.com/feed</item>
+    <item>http://feedproxy.google.com/TechCrunch</item>
+  </string-array>
+  <string-array name="rss_feed_name">
+    <item>DataDroid</item>
+    <item>Foxykeep on Android</item>
+    <item>TechCrunch</item>
+  </string-array>
+  <string-array name="request_types">
+    <item>GET</item>
+    <item>POST</item>
+    <item>PUT</item>
+    <item>DELETE</item>
+  </string-array>
 
 </resources>

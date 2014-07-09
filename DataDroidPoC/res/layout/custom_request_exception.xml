@@ -9,49 +9,49 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp">
 
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/b_without_exception"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="@string/custom_request_exception_b_without_exception"/>
+
+    <Button
+        android:id="@+id/b_with_exception"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="@string/custom_request_exception_b_with_exception"/>
+  </LinearLayout>
+
+  <View
+      android:layout_width="fill_parent"
+      android:layout_height="2dp"
+      android:background="?android:attr/listDivider"/>
+
+  <FrameLayout
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent">
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+    <TextView
+        android:id="@android:id/empty"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/b_without_exception"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/custom_request_exception_b_without_exception" />
-
-        <Button
-            android:id="@+id/b_with_exception"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/custom_request_exception_b_with_exception" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="?android:attr/listDivider" />
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-
-        <TextView
-            android:id="@android:id/empty"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="30dp"
-            android:text="@string/custom_request_exception_tv_empty" />
-    </FrameLayout>
+        android:gravity="center"
+        android:paddingTop="30dp"
+        android:text="@string/custom_request_exception_tv_empty"/>
+  </FrameLayout>
 
 </LinearLayout>

@@ -21,43 +21,42 @@ import android.os.Bundle;
 
 public final class RequestTypesOperation implements RequestService.Operation {
 
-    public static final String PARAM_METHOD = "com.foxykeep.datadroidpoc.extra.method";
+  public static final String PARAM_METHOD = "com.foxykeep.datadroidpoc.extra.method";
 
-    @Override
-    public Bundle execute(Context context, Request request)
-            throws ConnectionException, DataException, CustomRequestException {
-        String url;
-        NetworkConnection.Method method;
+  @Override
+  public Bundle execute(Context context, Request request)
+      throws ConnectionException, DataException, CustomRequestException {
+    String url;
+    NetworkConnection.Method method;
 
-        switch (request.getInt(PARAM_METHOD)) {
-            case 0: // GET
-                url = WSConfig.WS_REQUEST_TYPES_GET;
-                method = NetworkConnection.Method.GET;
-                break;
-            case 1: // POST
-                url = WSConfig.WS_REQUEST_TYPES_POST;
-                method = NetworkConnection.Method.POST;
-                break;
-            case 2: // PUT
-                url = WSConfig.WS_REQUEST_TYPES_PUT;
-                method = NetworkConnection.Method.PUT;
-                break;
-            case 3: // DELETE
-                url = WSConfig.WS_REQUEST_TYPES_DELETE;
-                method = NetworkConnection.Method.DELETE;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown method: "
-                        + request.getInt(PARAM_METHOD));
-        }
-
-        NetworkConnection connection = new NetworkConnection(context, url);
-        connection.setMethod(method);
-        NetworkConnection.ConnectionResult result = connection.execute();
-
-        // Parse the result
-        Bundle bundle = new Bundle();
-        bundle.putString(PoCRequestFactory.BUNDLE_EXTRA_RESULT ,result.body);
-        return bundle;
+    switch (request.getInt(PARAM_METHOD)) {
+      case 0: // GET
+        url = WSConfig.WS_REQUEST_TYPES_GET;
+        method = NetworkConnection.Method.GET;
+        break;
+      case 1: // POST
+        url = WSConfig.WS_REQUEST_TYPES_POST;
+        method = NetworkConnection.Method.POST;
+        break;
+      case 2: // PUT
+        url = WSConfig.WS_REQUEST_TYPES_PUT;
+        method = NetworkConnection.Method.PUT;
+        break;
+      case 3: // DELETE
+        url = WSConfig.WS_REQUEST_TYPES_DELETE;
+        method = NetworkConnection.Method.DELETE;
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown method: " + request.getInt(PARAM_METHOD));
     }
+
+    NetworkConnection connection = new NetworkConnection(context, url);
+    connection.setMethod(method);
+    NetworkConnection.ConnectionResult result = connection.execute();
+
+    // Parse the result
+    Bundle bundle = new Bundle();
+    bundle.putString(PoCRequestFactory.BUNDLE_EXTRA_RESULT, result.body);
+    return bundle;
+  }
 }
